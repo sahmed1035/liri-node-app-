@@ -32,7 +32,8 @@ key: ab961840
 
 
 Bands In Town API
-
+https://app.swaggerhub.com/apis/Bandsintown/PublicAPI/3.0.0
+Your app ID is 4f84ef7d580619185eafcaecf4b9aed7.
 
 Navigate to the root of your project and run `npm init -y` &mdash; this will initialize a `package.json` file for your project. The `package.json` file 
 is required for installing third party npm packages and saving their version numbers. 
