@@ -3,41 +3,43 @@ var keys = require("./keys.js");
 // Include the axios npm package (Don't forget to run "npm install axios" in this folder first!)
 var axios = require("axios");
 var moment = require("moment");
-
+var Spotify = require('node-spotify-api');
 // `spotify-this-song`
 //creating a function displays the result of searched songs user choose
-// songname is being passed to var searchSongInfo
-var Spotify = require('node-spotify-api');
-var spotify = new Spotify(keys.spotify);
 
-var command=process.argv[2];
-var search1=process.argv.slice(3).join(" ");
+var spotifyMySong = function() {
 
-// function for getting the artist name user searches
-var searchedArtist=function(artist){
- return artist.name;
+  var spotify = new Spotify(keys.spotify);
+
+  //var command=process.argv[2];
+  //var search1=process.argv.slice(3).join(" ");
+  
+  // function for getting the artist name user searches
+  var searchedArtist=function(artist){
+   return artist.name;
+  }
+  
+  var songName=process.argv.slice(3).join(" ");
+  
+  spotify.search({ type: 'track', query:songName}, function (err, data) {
+   if (err) {
+     return console.log('Error occurred: ' + err);
+   }
+  
+   //loop through every song 
+   var songs=data.tracks.items;
+   for(var i=0; i<songs.length;i++){
+     console.log(i);
+     console.log('Artist: ' +songs[i].artists.map(searchedArtist));
+     console.log('Song Name: ' +songs[i].name);
+     console.log('Song Preview: ' +songs[i].preview_url);
+     console.log('Album Name: ' +songs[i].album.name);
+  
+   }
+  });
 }
 
-var songName="I want it that way";
 
-spotify.search({ type: 'track', query:songName}, function (err, data) {
- if (err) {
-   return console.log('Error occurred: ' + err);
- }
-
- var songs=data.tracks.items;
- for(var i=0; i<songs.length;i++){
-   console.log(i);
-   console.log('Artist: ' +songs[i].artists.map(searchedArtist));
-   console.log('Song Name: ' +songs[i].name);
-   console.log('Song Preview: ' +songs[i].preview_url);
-   console.log('Album Name: ' +songs[i].album.name);
-
- }
- //console.log(data);
- //console.log(JSON.stringify(data, null, 2));
- //console.log(data.tracks.items[0]);
-});
 
 
 //Make it so liri.js can take in one of the following commands:
@@ -86,4 +88,26 @@ axios.get(`https://rest.bandsintown.com/artists/${search}/events?app_id=4f84ef7d
   }
 );
 
-    
+
+// switch statements for the function for user commands
+var myCommand = function(caseData, functionData) { //caseData `spotify-this-song` //functionData spotifyMySong()
+  switch(caseData) {
+    case 'spotify-this-song' :
+          spotifyMySong();
+          break;
+    default:  console.log('If no song is provided then your program will default to "The Sign" by Ace of Base.');
+
+
+
+  }
+}
+
+// a function to run myCommand
+
+var runCommand = function(argOne, argTwo) {
+  myCommand(argOne, argTwo);
+};
+
+runCommand(process.argv[2], process.argv.slice(3).join(" ")); //process.argv[2] spotify-this-song //process.argv[3] songName
+
+

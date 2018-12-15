@@ -9,7 +9,7 @@ This is a SIRI like LIRI Bot which provides information on user's query regardin
 
 ### Installing
 Node packages:
-
+After downloading the app, type in npm install. It will install the the required packages. 
    * [Moment](https://www.npmjs.com/package/moment)
 
    * [DotEnv](https://www.npmjs.com/package/dotenv)
