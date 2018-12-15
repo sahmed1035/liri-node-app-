@@ -11,7 +11,10 @@ var Spotify = require('node-spotify-api');
 //creating a function displays the result of searched songs user choose
 
 var spotifyMySong = function (functionData) { //read the file and search the song
-
+  // By default, if no movie name is provided, search for the song "The Sign"
+  if (!functionData) {
+    functionData = 'The Sign';
+  }
   var spotify = new Spotify(keys.spotify);
 
   // function for getting the artist name user searches to pass in as an argument for .map()
@@ -33,14 +36,12 @@ var spotifyMySong = function (functionData) { //read the file and search the son
       console.log('Song Preview: ' + songs[i].preview_url);
       console.log('Album Name: ' + songs[i].album.name);
       console.log('----------------------------------------------------------------');
-
     }
   });
 }
 
-
 /******************************************************************************************************************/
-//function for`do-what-it-says`
+                                                  //function for`do-what-it-says`
 /******************************************************************************************************************/
 // fs is a core Node package for reading and writing files
 const fs = require("fs");
@@ -55,7 +56,6 @@ var readRandomFile = function () {
     // Then split it by commas (to make it more readable)
     let dataArr = data.split(",");
 
-
     if (dataArr.length == 2) {
       myCommand(dataArr[0], dataArr[1]);
     } else if (dataArr.length == 1) {
@@ -65,31 +65,44 @@ var readRandomFile = function () {
 }
 
 /******************************************************************************************************************/
-//function for `movie-this`
+                                          //function for `movie-this`
 /******************************************************************************************************************/
 
 var searchMyMovie = function () {
   //grabing user input and joining them with a +. slicing on index 2 as 0 is node and 1 is file
   let search = process.argv.slice(3).join("+");
 
+  // By default, if no movie name is provided, search for the movie "Mr. Nobody"
+  if (!search) {
+    search = 'Mr. Nobody';
+  }
   // Then run a request with axios to the OMDB API with the movie specified
   axios.get(`http://www.omdbapi.com/?t=${search}&y=&plot=short&apikey=ab961840`).then(
     function (response) {
-      console.log("Title of the movie is: " + response.data.Title);
-      console.log("Year the movie came out is: " + response.data.Year);
-      console.log("IMDB Rating of the movie is: " + response.data.Ratings[0].Value);
-      console.log("Rotten Tomatoes Rating of the movie is: " + response.data.Ratings[1].Value);
-      console.log("Country where the movie was produced is: " + response.data.Country);
-      console.log("Language of the movie is: " + response.data.Language);
-      console.log("Plot of the movie is: " + response.data.Plot);
-      console.log("Actors in the movie are: " + response.data.Actors);
-      console.log('----------------------------------------------------------------');
+      var movieData = [  
+        "Title of the movie is: " + response.data.Title,
+        "Year the movie came out is: " + response.data.Year,
+        "IMDB Rating of the movie is: " + response.data.Ratings[0].Value,
+        "Rotten Tomatoes Rating of the movie is: " + response.data.Ratings[1].Value,
+        "Country where the movie was produced is: " + response.data.Country,
+        "Language of the movie is: " + response.data.Language,
+        "Plot of the movie is: " + response.data.Plot,
+        "Actors in the movie are: " + response.data.Actors,
+        '----------------------------------------------------------------'
+      ].join("\n\n");
+
+      //BONUS
+      // Append showData and the divider to log.txt, print showData to the console
+      fs.appendFile("log.txt", movieData, function (err) {
+        if (err) throw err;
+        console.log(movieData);
+      });
     }
   );
 }
 
 /******************************************************************************************************************/
-//function for `concert-this`
+                                            //function for `concert-this`
 /******************************************************************************************************************/
 
 var searchMyConcert = function () {
@@ -99,11 +112,21 @@ var searchMyConcert = function () {
   // Then run a request with axios to the OMDB API with the movie specified
   axios.get(`https://rest.bandsintown.com/artists/${search}/events?app_id=4f84ef7d580619185eafcaecf4b9aed7`).then(
     function (response) {
-      console.log("Name of the venue is: " + response.data[0].venue.name);
-      console.log("Location of the venue is: " + response.data[1].venue.city + ", " + response.data[1].venue.region + ", " + response.data[1].venue.country);
-      // moment(date of event).format(“MM/DD/YYYY”) 
-      console.log("Date of the Event is: " + moment(response.data[2].datetime).format("MM/DD/YYYY"));
-      console.log('----------------------------------------------------------------');
+      var concertData = [
+        "Name of the venue is: " + response.data[0].venue.name,
+        "Location of the venue is: " + response.data[1].venue.city + ", " + response.data[1].venue.region + ", " + response.data[1].venue.country,
+        // moment(date of event).format(“MM/DD/YYYY”) 
+        "Date of the Event is: " + moment(response.data[2].datetime).format("MM/DD/YYYY"),
+        '----------------------------------------------------------------'
+      ].join("\n\n");
+
+      //BONUS
+      // Append showData and the divider to log.txt, print showData to the console
+      fs.appendFile("log.txt", concertData, function(err) {
+        if (err) throw err;
+        console.log(concertData);
+       
+      });
     }
   );
 }
