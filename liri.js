@@ -4,21 +4,22 @@ var keys = require("./keys.js");
 var axios = require("axios");
 var moment = require("moment");
 var Spotify = require('node-spotify-api');
-// `spotify-this-song`
+
+/******************************************************************************************************************/
+//function for`spotify-this-song`
+/******************************************************************************************************************/
 //creating a function displays the result of searched songs user choose
 
-var spotifyMySong = function () {
+var spotifyMySong = function (functionData) { //read the file and search the song
 
   var spotify = new Spotify(keys.spotify);
 
-  // function for getting the artist name user searches
+  // function for getting the artist name user searches to pass in as an argument for .map()
   var searchedArtist = function (artist) {
     return artist.name;
   }
 
-  var songName = process.argv.slice(3).join(" ");
-
-  spotify.search({ type: 'track', query: songName }, function (err, data) {
+  spotify.search({ type: 'track', query: functionData }, function (err, data) {
     if (err) {
       return console.log('Error occurred: ' + err);
     }
@@ -38,10 +39,11 @@ var spotifyMySong = function () {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/******************************************************************************************************************/
+//function for`do-what-it-says`
+/******************************************************************************************************************/
 // fs is a core Node package for reading and writing files
 const fs = require("fs");
-//`do-what-it-says`
 var readRandomFile = function () {
   fs.readFile("random.txt", "utf8", function (error, data) {
 
@@ -53,7 +55,7 @@ var readRandomFile = function () {
     // Then split it by commas (to make it more readable)
     let dataArr = data.split(",");
 
-   
+
     if (dataArr.length == 2) {
       myCommand(dataArr[0], dataArr[1]);
     } else if (dataArr.length == 1) {
@@ -61,9 +63,11 @@ var readRandomFile = function () {
     }
   });
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// `movie-this`
+/******************************************************************************************************************/
+//function for `movie-this`
+/******************************************************************************************************************/
+
 var searchMyMovie = function () {
   //grabing user input and joining them with a +. slicing on index 2 as 0 is node and 1 is file
   let search = process.argv.slice(3).join("+");
@@ -84,9 +88,9 @@ var searchMyMovie = function () {
   );
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-// `concert-this`
+/******************************************************************************************************************/
+//function for `concert-this`
+/******************************************************************************************************************/
 
 var searchMyConcert = function () {
   //grabing user input and joining them with a +. slicing on index 2 as 0 is node and 1 is file name.
@@ -104,14 +108,16 @@ var searchMyConcert = function () {
   );
 }
 
-// switch statements for the function for user commands
-let myCommand = function (caseData, functionData) { //caseData `spotify-this-song` //functionData spotifyMySong()
+/******************************************************************************************************************/
+// switch statements function for the user commands
+/******************************************************************************************************************/
+
+let myCommand = function (caseData, functionData) {
+  //caseData `spotify-this-song` //functionData spotifyMySong()
   switch (caseData) {
     case 'spotify-this-song':
       spotifyMySong(functionData);
       break;
-    default:
-      console.log('If no song is provided then your program will default to "The Sign" by Ace of Base.');
 
     case 'movie-this':
       searchMyMovie(functionData);
@@ -125,16 +131,13 @@ let myCommand = function (caseData, functionData) { //caseData `spotify-this-son
 
     case 'do-what-it-says':
       readRandomFile();
+      console.log("do what it says");
       break;
+
   }
 }
 
-// a function to run myCommand
-
-let runCommand = function (argOne, argTwo) {
-  myCommand(argOne, argTwo);
-};
-
-runCommand(process.argv[2], process.argv.slice(3).join(" ")); //process.argv[2] spotify-this-song //process.argv[3] songName
+myCommand(process.argv[2], process.argv.slice(3).join(" "));
+//process.argv[2] spotify-this-song //process.argv[3] songName
 
 
