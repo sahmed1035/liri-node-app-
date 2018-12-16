@@ -1,7 +1,7 @@
 # Project Title
 liri-node-app-
 Assignment week 10
-
+* link of the video (https://drive.google.com/file/d/1ainCs_EtsxqoZKscpOxHkuLkP4IQxxc1/view)
 
 ## Project Description
 link to the video:
@@ -73,7 +73,7 @@ It  can take in one of the following commands:
 ## Authors
 
 * Syeda Ahmed
-* Portfolio Link: 
+
 
 
 
